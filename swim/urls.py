@@ -1,11 +1,11 @@
+""" Api routes """
 from rest_framework import routers
-from .views import SwimmerViewSet, DateViewSet, MarkViewSet
+from .api_v1 import SwimmerViewSet, DateViewSet, MarkViewSet
 
 router = routers.DefaultRouter()
 
-router.register('views/swimmer', SwimmerViewSet, 'swimmer')
-router.register('views/date', DateViewSet, 'date')
-router.register('views/mark', MarkViewSet, 'mark')
-
+router.register('api_v1/swimmer', SwimmerViewSet, 'swimmer')
+router.register('api_v1/date', DateViewSet, 'date')
+router.register('api_v1/mark', MarkViewSet, 'mark')
 
 urlpatterns = router.urls

@@ -6,5 +6,3 @@ from .models import Swimmer, Date, Mark
 admin.site.register(Swimmer)
 admin.site.register(Date)
 admin.site.register(Mark)
-
-

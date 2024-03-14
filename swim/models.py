@@ -21,14 +21,13 @@ class Date(models.Model):
     active = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.date)
-    
+        return f'{self.date} - {"Active" if self.active else "Inactive"}'
+
 class Mark(models.Model):
     """ Mark Model """
-    swimmer = models.ForeignKey(Swimmer.id, on_delete=models.CASCADE, default=0)
-    date = models.ForeignKey(Date.id, on_delete=models.CASCADE, default=0)
+    swimmer = models.ForeignKey(Swimmer, on_delete=models.CASCADE, default=None)
+    date = models.ForeignKey(Date, on_delete=models.CASCADE, default=None)
     meters = models.FloatField(blank=False, null=False)
 
     def __str__(self):
-        return ''#f'{self.swimmer} - {self.date} - {self.meters}'
-
+        return f'{self.swimmer} - {self.date} - {self.meters}'
