@@ -2,6 +2,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.utils import timezone
 from datetime import datetime
 from .models import Swimmer, Date, Mark
 
@@ -90,42 +91,49 @@ class DateAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Date.objects.count(), 0)
 
-# class MarkAPITestCase(APITestCase):
-#     def setUp(self):
-#         self.mark_data = {
-#             'mark': '10',
-#             'date': '2023-05-01',
-#             'swimmer': '1'
-#         }
-#         self.mark = Mark.objects.create(**self.mark_data)
-#         self.list_url = reverse('mark-list')
-#         self.detail_url = reverse('mark-detail', kwargs={'pk': self.mark.pk})
 
-#     def test_create_mark(self):
-#         response = self.client.post(self.list_url, self.mark_data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertEqual(Mark.objects.count(), 2)
 
-#     def test_retrieve_mark(self):
-#         response = self.client.get(self.detail_url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.data['mark'], self.mark_data['mark'])
 
-#     def test_update_mark(self):
-#         updated_data = {
-#             'mark': '9',
-#             'date': '2023-05-02',
-#             'swimmer': '2'
-#         }
-#         response = self.client.put(self.detail_url, updated_data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.mark.refresh_from_db()
-#         self.assertEqual(self.mark.mark, updated_data['mark'])
-#         self.assertEqual(self.mark.date, updated_data['date'])
-#         self.assertEqual(self.mark.swimmer, updated_data['swimmer'])
+class MarkAPITestCase(APITestCase):
+    def setUp(self):
+        self.swimmer = Swimmer.objects.create(name='John Doe', age=25, club='Example Club', city='Example City')
+        self.date = Date.objects.create(date=timezone.now(), active=True)
+        self.mark_data = {
+            'swimmer': self.swimmer,
+            'date': self.date,
+            'meters': 100.50
+        }
+        self.mark = Mark.objects.create(**self.mark_data)
+        self.list_url = reverse('mark-list')
+        self.detail_url = reverse('mark-detail', kwargs={'pk': self.mark.pk})
 
-#     def test_delete_mark(self):
-#         response = self.client.delete(self.detail_url)
-#         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-#         self.assertEqual(Mark.objects.count(), 0)
-        
+    def test_create_mark(self):
+        response = self.client.post(self.list_url, self.mark_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Mark.objects.count(), 2)
+
+
+    def test_retrieve_mark(self):
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['swimmer'], self.mark_data['swimmer'].pk)
+        self.assertEqual(response.data['date'], self.mark_data['date'].pk)
+        self.assertEqual(response.data['meters'], self.mark_data['meters'])
+    
+    # def test_update_mark(self):
+    #     updated_data = {
+    #         'swimmer': self.swimmer,
+    #         'date': self.date,
+    #         'meters': 200.75
+    #     }
+    #     response = self.client.put(self.detail_url, updated_data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.mark.refresh_from_db()
+    #     self.assertEqual(self.mark.meters, updated_data['meters'])
+    
+    def test_delete_mark(self):
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Mark.objects.count(), 0)
+
+

@@ -1,4 +1,5 @@
 .venv/*
+tzvio/__pycache__/*
 swim/__pycache__/*
 swim/migrations/__pycache__/*
 
