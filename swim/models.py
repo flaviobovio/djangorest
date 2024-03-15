@@ -15,6 +15,8 @@ class Swimmer(models.Model):
         return f'{str(self.name)} ({self.age}) - {self.club}'
 
 
+
+
 class Date(models.Model):
     """ Date Model """
     date = models.DateField(default=timezone.now ,blank=False, null=False)

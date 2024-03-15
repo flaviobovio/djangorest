@@ -104,6 +104,10 @@ class MarkAPITestCase(APITestCase):
             'meters': 100.50
         }
         self.mark = Mark.objects.create(**self.mark_data)
+
+        self.mark_data['swimmer'] = self.swimmer.pk
+        self.mark_data['date'] = self.date.pk
+
         self.list_url = reverse('mark-list')
         self.detail_url = reverse('mark-detail', kwargs={'pk': self.mark.pk})
 
@@ -116,20 +120,20 @@ class MarkAPITestCase(APITestCase):
     def test_retrieve_mark(self):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['swimmer'], self.mark_data['swimmer'].pk)
-        self.assertEqual(response.data['date'], self.mark_data['date'].pk)
+        self.assertEqual(response.data['swimmer'], self.mark_data['swimmer'])
+        self.assertEqual(response.data['date'], self.mark_data['date'])
         self.assertEqual(response.data['meters'], self.mark_data['meters'])
     
-    # def test_update_mark(self):
-    #     updated_data = {
-    #         'swimmer': self.swimmer,
-    #         'date': self.date,
-    #         'meters': 200.75
-    #     }
-    #     response = self.client.put(self.detail_url, updated_data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.mark.refresh_from_db()
-    #     self.assertEqual(self.mark.meters, updated_data['meters'])
+    def test_update_mark(self):
+        updated_data = {
+            'swimmer': self.swimmer.pk,
+            'date': self.date.pk,
+            'meters': 200.75
+        }
+        response = self.client.put(self.detail_url, updated_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.mark.refresh_from_db()
+        self.assertEqual(self.mark.meters, updated_data['meters'])
     
     def test_delete_mark(self):
         response = self.client.delete(self.detail_url)
