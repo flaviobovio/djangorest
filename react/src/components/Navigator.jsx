@@ -4,11 +4,8 @@ import {
     Nav,
     NavItem,
     NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-} from 'react-bootstrap';
+} from 'react-bootstrap'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPersonSwimming, faStopwatch, faTrophy } from '@fortawesome/free-solid-svg-icons'
 import { faBuilding, faCalendar } from '@fortawesome/free-regular-svg-icons'
@@ -25,7 +22,7 @@ export function Navigator(args) {
                 <Nav className="me-auto">
                     {/* <Nav className="me-auto" navbar> */}
                     <NavItem>
-                        <NavLink href="/pages/nadadors">
+                        <NavLink href="/swimmer">                           
                             <FontAwesomeIcon size={"xl"} icon={faPersonSwimming} /> Nadadores
                         </NavLink>
                     </NavItem>
@@ -46,26 +43,12 @@ export function Navigator(args) {
                             <FontAwesomeIcon size={"xl"} icon={faStopwatch} /> Mediciones
                         </NavLink>
                     </NavItem>
-
-
-
-
-
-
-                    <UncontrolledDropdown nav inNavbar>
-                        <DropdownToggle nav caret>
-                            Options
-                        </DropdownToggle>
-                        <DropdownMenu end>
-                            <DropdownItem>Option 1</DropdownItem>
-                            <DropdownItem>Option 2</DropdownItem>
-                            <DropdownItem divider />
-                            <DropdownItem>Reset</DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                </Nav>
-            </Navbar>
-        </div>
+                 </Nav>
+             </Navbar>
+         </div>
     );
 }
+
+
+
 
