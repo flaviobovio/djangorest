@@ -27,7 +27,7 @@ export function Navigator(args) {
                         </NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink href="/pages/fechas">
+                        <NavLink href="/swimmerform">
                             <FontAwesomeIcon size={"xl"} icon={faCalendar} /> Fechas
                         </NavLink>
                     </NavItem>
