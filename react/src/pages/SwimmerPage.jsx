@@ -17,7 +17,7 @@ import {} from "./SwimmerFormPage"
 
 export function SwimmerPage() {
 
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
   // Using useEffect to call the API once mounted and set the data
   // useEffect(() => {
@@ -27,49 +27,67 @@ export function SwimmerPage() {
   //   })();
   // }, []);
 
-  //   const handleAgregar =  (e) => {
-  //   const newdata = [...data, e];
-  //   setData(newdata);
-  // }
-
-  const data = [
-    {
-        "id": 1,
-        "name": "Flavio Bovio",
-        "age": 51,
-        "club": "Reus",
-        "city": "Venado Tuerto",
-        "created_at": "2024-03-12T23:47:17.475605Z",
-        "updated_at": "2024-03-12T23:47:17.475654Z"
-    },
-    {
-        "id": 2,
-        "name": "Morero Mauro Alejandro",
-        "age": 38,
-        "club": "Reus",
-        "city": "Venado Tuerto",
-        "created_at": "2024-03-13T00:48:56.969798Z",
-        "updated_at": "2024-03-13T22:46:51.349130Z"
-    },
-    {
-        "id": 3,
-        "name": "Cicerchia Daniel",
-        "age": 48,
-        "club": "Reus",
-        "city": "Venado Tuerto",
-        "created_at": "2024-03-15T15:42:24.842796Z",
-        "updated_at": "2024-03-15T15:42:24.843145Z"
-    }
-]
 
 
-  // // Uso useCallback para evitar warnings en useMemo Columns
-  // const handleEditar = useCallback((e) => {
-  //   const newdata = [...data];
-  //   const i = newdata.findIndex(item => item.id === e.id);
-  //   newdata[i] = e;
-  //   setData(newdata);
-  // }, [data]);
+  useEffect(() => {
+    (async () => {
+      setData(
+        [
+          {
+              "id": 1,
+              "name": "Flavio Bovio",
+              "age": 51,
+              "club": "Reus",
+              "city": "Venado Tuerto",
+              "created_at": "2024-03-12T23:47:17.475605Z",
+              "updated_at": "2024-03-12T23:47:17.475654Z"
+          },
+          {
+              "id": 2,
+              "name": "Morero Mauro Alejandro",
+              "age": 38,
+              "club": "Reus",
+              "city": "Venado Tuerto",
+              "created_at": "2024-03-13T00:48:56.969798Z",
+              "updated_at": "2024-03-13T22:46:51.349130Z"
+          },
+          {
+              "id": 3,
+              "name": "Cicerchia Daniel",
+              "age": 48,
+              "club": "Reus",
+              "city": "Venado Tuerto",
+              "created_at": "2024-03-15T15:42:24.842796Z",
+              "updated_at": "2024-03-15T15:42:24.843145Z"
+          }
+      ]
+      
+
+
+
+
+
+      );
+    })();
+  }, []);
+
+
+
+
+    const handleAgregar =  (e) => {
+    const newdata = [...data, e];
+    setData(newdata);
+  }
+
+
+
+  // Uso useCallback para evitar warnings en useMemo Columns
+  const handleEditar = useCallback((e) => {
+    const newdata = [...data];
+    const i = newdata.findIndex(item => item.id === e.id);
+    newdata[i] = e;
+    setData(newdata);
+  }, [data]);
 
   // // Uso useCallback para evitar warnings en useMemo Columns
   // const handleBorrar = useCallback((id) => {
@@ -96,16 +114,16 @@ export function SwimmerPage() {
         accessor: 'club',
       },
 
-    //   ,{Header: '',
-    //   accessor: 'action',
-    //   Cell: row => (
-    //   <div>
-    //     edit /delete
-    //      <NadadorForm data={row.row.original} handleEditar={handleEditar} handleBorrar={handleBorrar}/>
-    //   </div>
-    //   )},
+       ,{Header: '',
+       accessor: 'action',
+       Cell: row => (
+       <div>
+        edit /delete
+          {/* <NadadorForm data={row.row.original} handleEditar={handleEditar} handleBorrar={handleBorrar}/> */}
+       </div>
+       )},
     ],
-    // [handleEditar, handleBorrar]
+    //  [handleEditar, handleBorrar]
   )
 
   const {

@@ -3,6 +3,7 @@ import './App.css'
 import { Navigator } from "./components/Navigator"
 import { SwimmerPage } from "./pages/SwimmerPage"
 import { SwimmerFormPage } from "./pages/SwimmerFormPage"
+import {Tabla} from "./pages/Tabla"
 
 function App() {
 
@@ -12,7 +13,7 @@ function App() {
       <Navigator />
 
       <Routes>
-        <Route path="/swimmer" element={<SwimmerPage />} />
+        <Route path="/swimmer" element={<Tabla />} />
         <Route path="/swimmerform" element={<SwimmerFormPage />} />
       </Routes>
     </BrowserRouter>
