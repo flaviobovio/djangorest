@@ -1,15 +1,21 @@
 """  ViewSets """
 from rest_framework import viewsets, permissions
-from .models import Swimmer, Date, Mark
-from .serializers import SwimmerSerializer, DateSerializer, MarkSerializer
+from .models import Club, Swimmer, Date, Mark
+from .serializers import ClubSerializer, SwimmerSerializer, DateSerializer, MarkSerializer
 
 
 
 
 # Create your views here
+class ClubViewSet(viewsets.ModelViewSet):
+    """ Club  ViewSet """
+    queryset = Club.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ClubSerializer    
+
 
 class SwimmerViewSet(viewsets.ModelViewSet):
-    """ Swimmer ViewSet"""
+    """ Swimmer ViewSet """
     queryset = Swimmer.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = SwimmerSerializer

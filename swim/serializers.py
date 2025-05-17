@@ -1,6 +1,17 @@
 """ DjangoRest serializers """
 from rest_framework import serializers
-from .models import Swimmer, Date, Mark
+from .models import Club, Swimmer, Date, Mark
+
+class ClubSerializer(serializers.ModelSerializer):
+    """ Club serializer """
+    class Meta:
+        """ Club Meta class """
+        model = Club
+        fields = '__all__'
+        extra_kwargs = {
+            'Name': {'required': True}
+        }
+
 
 
 class SwimmerSerializer(serializers.ModelSerializer):

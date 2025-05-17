@@ -1,3 +1,4 @@
+*.pyc
 .venv/*
 tzvio/__pycache__/*
 swim/__pycache__/*

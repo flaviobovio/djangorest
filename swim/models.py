@@ -2,19 +2,30 @@
 from django.db import models
 from django.utils import timezone
 
+class Club(models.Model):
+    """" club model """
+    name = models.CharField(max_length=100, blank=False, null=False)
+    city = models.CharField(max_length=100)
+    def __str__(self):
+        return f'{self.name} - {self.city}'
+
 class Swimmer(models.Model):
     """ swimmer model """
+    SEX_CHOICES = [        
+        ('F', 'Femenino'),
+        ('M', 'Masculino'),
+    ]
+
     name = models.CharField(max_length=100, blank=False, null=False)
+    sex = models.CharField(max_length=1, choices=SEX_CHOICES, blank=False, null=False)    
     age = models.IntegerField()
-    club = models.CharField(max_length=100)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, default=None)    
     city = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{str(self.name)} ({self.age}) - {self.club}'
-
-
 
 
 class Date(models.Model):
