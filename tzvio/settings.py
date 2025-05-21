@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-kk)835wri0p-5&13l4gatx7j0gbqza_c-(r#ya5s7p_yb1j(zf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['localhost', 'flavioboviovt.pythonanywhere.com', 'djangorest.onrender.com']
+ALLOWED_HOSTS = ['localhost', 'flavioboviovt.pythonanywhere.com', 'djangorest-etpk.onrender.com']
 
 
 # Application definition
