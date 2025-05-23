@@ -22,7 +22,8 @@ class SwimmerSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'created_at', 'updated_at')
         extra_kwargs = {
-            'name': {'required': True}
+            'name': {'required': True},
+            'age': {'required': True},            
         }
 
 class DateSerializer(serializers.ModelSerializer):
@@ -42,5 +43,7 @@ class MarkSerializer(serializers.ModelSerializer):
         model = Mark
         fields = '__all__'
         extra_kwargs = {
+            'swimmer': {'required': True},
+            'date': {'required': True},                        
             'meters': {'required': True}
         }
