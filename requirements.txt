@@ -6,13 +6,16 @@ coreschema==0.0.4
 Django==5.2.1
 django-cors-headers==4.7.0
 djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
 gunicorn==23.0.0
 idna==3.10
 itypes==1.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.2
 packaging==25.0
+PyJWT==2.9.0
 requests==2.32.3
+setuptools==80.8.0
 sqlparse==0.5.3
 uritemplate==4.1.1
 urllib3==2.4.0
