@@ -2,6 +2,15 @@
 from django.db import models
 from django.utils import timezone
 
+class Category(models.Model):
+    """" category model """
+    name = models.CharField(max_length=100, blank=False, null=False)
+    age_min = models.IntegerField(blank=False, null=False)
+    age_max = models.IntegerField(blank=False, null=False)
+    
+    def __str__(self):
+        return f'{self.name} ({self.age_min}-{self.age_max})'
+
 class Club(models.Model):
     """" club model """
     name = models.CharField(max_length=100, blank=False, null=False)
@@ -15,7 +24,7 @@ class Swimmer(models.Model):
         ('F', 'Femenino'),
         ('M', 'Masculino'),
     ]
-
+    
     name = models.CharField(max_length=100, blank=False, null=False)
     sex = models.CharField(max_length=1, choices=SEX_CHOICES, blank=False, null=False)    
     age = models.IntegerField()

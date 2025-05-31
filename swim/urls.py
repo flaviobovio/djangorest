@@ -12,6 +12,6 @@ router.register('mark', MarkViewSet, 'mark')
 
 urlpatterns = [
     path('', include(router.urls)),  
-    path('api/v1/', include(router.urls)),
+    path('api/', include(router.urls)),
     path('docs/', include_docs_urls(title='Swim API'))
 ]
