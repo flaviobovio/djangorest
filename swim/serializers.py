@@ -17,12 +17,19 @@ class CategorySerializer(serializers.ModelSerializer):
             'age_max': {'required': True},                         
         }
 
-
     def validate(self, data):
-        if data['age_max'] <= data['age_min']:
-            raise serializers.ValidationError("age_max must be greater than age_min")
-        return data
+        age_min = data.get('age_min', self.instance.age_min if self.instance else None)
+        age_max = data.get('age_max', self.instance.age_max if self.instance else None)
 
+        # Validate not None
+        if age_min is None or age_max is None:
+            raise serializers.ValidationError("Both 'age_min' and 'age_max' must be provided and not None")
+
+        # Validate max >= min 
+        if age_max < age_min:
+            raise serializers.ValidationError("'age_max' must be greater or equal than 'age_min'")
+
+        return data
 
 class ClubSerializer(serializers.ModelSerializer):
     """ Club serializer """

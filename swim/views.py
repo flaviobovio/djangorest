@@ -1,11 +1,17 @@
 """  ViewSets """
 from rest_framework import viewsets
-from .models import Club, Swimmer, Date, Mark
-from .serializers import ClubSerializer, SwimmerSerializer, DateSerializer, MarkSerializer
+from .models import Club, Swimmer, Date, Mark, Category
+from .serializers import ClubSerializer, SwimmerSerializer, DateSerializer, MarkSerializer, CategorySerializer
 from rest_framework import permissions
 
 
 # Create your views here
+class CategoryViewSet(viewsets.ModelViewSet):
+    """ Category ViewSet """
+    queryset = Category.objects.all()
+    permission_classes = [permissions.DjangoModelPermissions]
+    serializer_class = CategorySerializer    
+
 class ClubViewSet(viewsets.ModelViewSet):
     """ Club  ViewSet """
     queryset = Club.objects.all()

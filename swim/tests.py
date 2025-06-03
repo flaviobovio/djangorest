@@ -2,10 +2,24 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.utils import timezone
-from .models import Club, Swimmer, Date, Mark
+from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import Club, Swimmer, Date, Mark, Category
 
-class ClubAPITestCase(APITestCase):
+class AuthenticatedAPITestCase(APITestCase):
+    """ SuperUser for tests """
     def setUp(self):
+        self.user = User.objects.create_superuser(
+            username='admin', email='admin@example.com', password='admin123'
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+
+
+class ClubAPITestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super().setUp()
         self.club = Club.objects.create(name="Club A", city="Buenos Aires")
         self.list_url = reverse('club-list')
         self.detail_url = reverse('club-detail', args=[self.club.id])
@@ -47,14 +61,9 @@ class ClubAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Club.objects.count(), 0)
 
-
-from django.urls import reverse
-from rest_framework.test import APITestCase
-from rest_framework import status
-from .models import Swimmer, Club
-
-class SwimmerAPITestCase(APITestCase):
+class SwimmerAPITestCase(AuthenticatedAPITestCase):
     def setUp(self):
+        super().setUp()
         self.club = Club.objects.create(name="Club X", city="Rosario")
         self.swimmer = Swimmer.objects.create(
             name="Lucía Pérez",
@@ -113,7 +122,6 @@ class SwimmerAPITestCase(APITestCase):
         self.assertEqual(Swimmer.objects.count(), 0)
 
     def test_create_swimmer_missing_required_fields(self):
-        # name and age are required
         data = {
             "sex": "M",
             "club": self.club.id,
@@ -127,7 +135,7 @@ class SwimmerAPITestCase(APITestCase):
     def test_invalid_sex_choice(self):
         data = {
             "name": "Invalido",
-            "sex": "X",  # Invalid choice
+            "sex": "X",
             "age": 20,
             "club": self.club.id,
             "city": "Corrientes"
@@ -136,10 +144,9 @@ class SwimmerAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('sex', response.data)
 
-
-
-class DateAPITestCase(APITestCase):
+class DateAPITestCase(AuthenticatedAPITestCase):
     def setUp(self):
+        super().setUp()
         self.date_instance = Date.objects.create(
             date=timezone.now().date(),
             active=True
@@ -201,11 +208,9 @@ class DateAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('date', response.data)
 
-
-
-class MarkAPITestCase(APITestCase):
+class MarkAPITestCase(AuthenticatedAPITestCase):
     def setUp(self):
-        # Crear datos relacionados necesarios
+        super().setUp()
         self.club = Club.objects.create(name="Club Pinocho", city="Buenos Aires")
         self.swimmer = Swimmer.objects.create(
             name="Juan Pérez",
@@ -216,8 +221,6 @@ class MarkAPITestCase(APITestCase):
         )
         self.date = Date.objects.create(date=timezone.now().date(), active=True)
         self.mark = Mark.objects.create(swimmer=self.swimmer, date=self.date, meters=50.5)
-
-        # URLs
         self.list_url = reverse('mark-list')
         self.detail_url = reverse('mark-detail', args=[self.mark.id])
 
@@ -271,9 +274,71 @@ class MarkAPITestCase(APITestCase):
     def test_create_mark_missing_fields(self):
         data = {
             "swimmer": self.swimmer.id
-            # Faltan date y meters
         }
         response = self.client.post(self.list_url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('date', response.data)
         self.assertIn('meters', response.data)
+
+class CategoryAPITestCase(AuthenticatedAPITestCase):
+    def setUp(self):
+        super().setUp()
+        self.category = Category.objects.create(name="Juvenil", age_min=12, age_max=17)
+        self.list_url = reverse('category-list')
+        self.detail_url = reverse('category-detail', args=[self.category.id])
+
+    def test_list_categories(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreaterEqual(len(response.data), 1)
+
+    def test_retrieve_category(self):
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.category.id)
+        self.assertEqual(response.data['name'], "Juvenil")
+
+    def test_create_category(self):
+        data = {
+            "name": "Infantil",
+            "age_min": 8,
+            "age_max": 11
+        }
+        response = self.client.post(self.list_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Category.objects.count(), 2)
+        self.assertEqual(response.data['name'], "Infantil")
+
+    def test_create_category_invalid_age_range(self):
+        data = {
+            "name": "Cadete",
+            "age_min": 14,
+            "age_max": 10
+        }
+        response = self.client.post(self.list_url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('non_field_errors', response.data)
+        self.assertIn("'age_max' must be greater or equal than 'age_min'", str(response.data['non_field_errors']))
+
+    def test_update_category(self):
+        data = {
+            "name": "Juvenil Actualizado",
+            "age_min": 13,
+            "age_max": 18
+        }
+        response = self.client.put(self.detail_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.category.refresh_from_db()
+        self.assertEqual(self.category.name, "Juvenil Actualizado")
+
+    def test_partial_update_category(self):
+        data = {"age_max": 20}
+        response = self.client.patch(self.detail_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.category.refresh_from_db()
+        self.assertEqual(self.category.age_max, 20)
+
+    def test_delete_category(self):
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Category.objects.count(), 0)
