@@ -67,6 +67,10 @@ class DateSerializer(serializers.ModelSerializer):
 
 class MarkSerializer(serializers.ModelSerializer):
     """ Mark serializer """
+
+    swimmer = SwimmerSerializer(read_only=True)
+    date = DateSerializer(read_only=True)
+
     class Meta:
         """ Mark Meta class """
         model = Mark
