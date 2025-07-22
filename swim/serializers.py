@@ -65,18 +65,45 @@ class DateSerializer(serializers.ModelSerializer):
             'date': {'required': True}
         }
 
-class MarkSerializer(serializers.ModelSerializer):
-    """ Mark serializer """
+# class MarkSerializer(serializers.ModelSerializer):
+#     """ Mark serializer """
 
-    swimmer = SwimmerSerializer(read_only=True)
-    date = DateSerializer(read_only=True)
+#     swimmer = SwimmerSerializer(read_only=True)
+#     date = DateSerializer(read_only=True)
+
+#     class Meta:
+#         """ Mark Meta class """
+#         model = Mark
+#         fields = '__all__'
+#         extra_kwargs = {
+#             'swimmer': {'required': True},
+#             'date': {'required': True},                        
+#             'meters': {'required': True}
+#         }
+class MarkSerializer(serializers.ModelSerializer):
+    # IDs para escritura
+    swimmer = serializers.PrimaryKeyRelatedField(queryset=Swimmer.objects.all())
+    date = serializers.PrimaryKeyRelatedField(queryset=Date.objects.all())
+
+    # Detalles anidados para lectura
+    swimmer_detail = SwimmerSerializer(source='swimmer', read_only=True)
+    date_detail = DateSerializer(source='date', read_only=True)
 
     class Meta:
-        """ Mark Meta class """
         model = Mark
-        fields = '__all__'
-        extra_kwargs = {
-            'swimmer': {'required': True},
-            'date': {'required': True},                        
-            'meters': {'required': True}
-        }
+        fields = ['id', 'swimmer', 'date', 'meters', 'swimmer_detail', 'date_detail']
+
+    def validate(self, data):
+        """
+        Evita marcas duplicadas para un mismo nadador en una misma fecha.
+        """
+        swimmer = data.get('swimmer')
+        date = data.get('date')
+
+        # Si estamos actualizando, excluimos la instancia actual
+        instance = self.instance
+
+        if Mark.objects.filter(swimmer=swimmer, date=date).exclude(id=getattr(instance, 'id', None)).exists():
+            raise serializers.ValidationError("Ya existe una marca para este nadador en esta fecha.")
+
+        return data
