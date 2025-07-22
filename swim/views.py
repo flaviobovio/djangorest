@@ -31,9 +31,25 @@ class SwimmerViewSet(viewsets.ModelViewSet):
 
 class DateViewSet(viewsets.ModelViewSet):
     """ Date ViewSet """
-    queryset = Date.objects.all()
+    # queryset = Date.objects.all()
     permission_classes = [permissions.DjangoModelPermissions]
     serializer_class = DateSerializer
+
+    def get_queryset(self):
+        queryset = Date.objects.all()
+        active = self.request.query_params.get('active')
+
+        if active is not None:
+            if active.lower() == 'true':
+                queryset = queryset.filter(active=True)
+            elif active.lower() == 'false':
+                queryset = queryset.filter(active=False)
+            else:
+                raise ValueError("Invalid value for 'active' parameter. Use 'true' or 'false'.")
+        return queryset
+
+
+
 
 class MarkViewSet(viewsets.ModelViewSet):
     """ Mark ViewSet """
