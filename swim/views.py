@@ -1,5 +1,5 @@
 """  ViewSets """
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from .models import Club, Swimmer, Date, Mark, Category
 from .serializers import ClubSerializer, SwimmerSerializer, DateSerializer, MarkSerializer, CategorySerializer
 from rest_framework import permissions
@@ -24,6 +24,10 @@ class SwimmerViewSet(viewsets.ModelViewSet):
     queryset = Swimmer.objects.all()
     permission_classes = [permissions.DjangoModelPermissions]
     serializer_class = SwimmerSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+
 
 class DateViewSet(viewsets.ModelViewSet):
     """ Date ViewSet """
