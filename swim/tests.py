@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Club, Swimmer, Date, Mark, Category
+from datetime import timedelta
 
 class AuthenticatedAPITestCase(APITestCase):
     """ SuperUser for tests """
@@ -208,79 +209,7 @@ class DateAPITestCase(AuthenticatedAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('date', response.data)
 
-# class MarkAPITestCase(AuthenticatedAPITestCase):
-#     def setUp(self):
-#         super().setUp()
-#         self.club = Club.objects.create(name="Club Pinocho", city="Buenos Aires")
-#         self.swimmer = Swimmer.objects.create(
-#             name="Juan Pérez",
-#             sex="M",
-#             age=20,
-#             club=self.club,
-#             city="Buenos Aires"
-#         )
-#         self.date = Date.objects.create(date=timezone.now().date(), active=True)
-#         self.mark = Mark.objects.create(swimmer=self.swimmer, date=self.date, meters=50.5)
-#         self.list_url = reverse('mark-list')
-#         self.detail_url = reverse('mark-detail', args=[self.mark.id])
 
-#     def test_list_marks(self):
-#         response = self.client.get(self.list_url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertGreaterEqual(len(response.data), 1)
-
-#     def test_retrieve_mark(self):
-#         response = self.client.get(self.detail_url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.data['id'], self.mark.id)
-#         self.assertEqual(float(response.data['meters']), 50.5)
-
-#     def test_create_mark(self):
-#         data = {
-#             "swimmer": self.swimmer.id,
-#             "date": self.date.id,
-#             "meters": 100.0
-#         }
-#         response = self.client.post(self.list_url, data)
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertEqual(Mark.objects.count(), 2)
-#         self.assertEqual(float(response.data['meters']), 100.0)
-
-#     def test_update_mark(self):
-#         data = {
-#             "swimmer": self.swimmer.id,
-#             "date": self.date.id,
-#             "meters": 200.0
-#         }
-#         response = self.client.put(self.detail_url, data)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.mark.refresh_from_db()
-#         self.assertEqual(self.mark.meters, 200.0)
-
-#     def test_partial_update_mark(self):
-#         data = {
-#             "meters": 75.0
-#         }
-#         response = self.client.patch(self.detail_url, data)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.mark.refresh_from_db()
-#         self.assertEqual(self.mark.meters, 75.0)
-
-#     def test_delete_mark(self):
-#         response = self.client.delete(self.detail_url)
-#         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-#         self.assertEqual(Mark.objects.count(), 0)
-
-#     def test_create_mark_missing_fields(self):
-#         data = {
-#             "swimmer": self.swimmer.id
-#         }
-#         response = self.client.post(self.list_url, data)
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertIn('date', response.data)
-#         self.assertIn('meters', response.data)
-
-from datetime import timedelta
 
 class MarkAPITestCase(AuthenticatedAPITestCase):
     def setUp(self):

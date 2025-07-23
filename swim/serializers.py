@@ -45,11 +45,17 @@ class ClubSerializer(serializers.ModelSerializer):
 
 class SwimmerSerializer(serializers.ModelSerializer):
     """ Swimmer serializer """
+    # IDs para escritura
+    club = serializers.PrimaryKeyRelatedField(queryset=Club.objects.all())
+    # Detalles anidados para lectura
+    club_detail = ClubSerializer(source='club', read_only=True)
+
     class Meta:
         """ Swimmer Meta class """
         model = Swimmer
-        fields = '__all__'
-        read_only_fields = ('id', 'created_at', 'updated_at')
+        fields = ['id', 'name','sex','age','club','city','created_at','updated_at', 'club_detail']
+
+        read_only_fields = ('created_at', 'updated_at')
         extra_kwargs = {
             'name': {'required': True},
             'age': {'required': True},            
@@ -65,22 +71,9 @@ class DateSerializer(serializers.ModelSerializer):
             'date': {'required': True}
         }
 
-# class MarkSerializer(serializers.ModelSerializer):
-#     """ Mark serializer """
 
-#     swimmer = SwimmerSerializer(read_only=True)
-#     date = DateSerializer(read_only=True)
-
-#     class Meta:
-#         """ Mark Meta class """
-#         model = Mark
-#         fields = '__all__'
-#         extra_kwargs = {
-#             'swimmer': {'required': True},
-#             'date': {'required': True},                        
-#             'meters': {'required': True}
-#         }
 class MarkSerializer(serializers.ModelSerializer):
+    """ Mark serializer """
     # IDs para escritura
     swimmer = serializers.PrimaryKeyRelatedField(queryset=Swimmer.objects.all())
     date = serializers.PrimaryKeyRelatedField(queryset=Date.objects.all())
