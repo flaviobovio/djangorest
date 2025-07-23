@@ -26,6 +26,7 @@ class Swimmer(models.Model):
     ]
     
     name = models.CharField(max_length=100, blank=False, null=False)
+    identification = models.CharField(max_length=20, default='')
     sex = models.CharField(max_length=1, choices=SEX_CHOICES, blank=False, null=False)    
     age = models.IntegerField()
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=None)    
