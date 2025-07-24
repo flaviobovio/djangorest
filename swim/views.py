@@ -25,7 +25,7 @@ class SwimmerViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissions]
     serializer_class = SwimmerSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    search_fields = ['name', 'identification']
 
 
 

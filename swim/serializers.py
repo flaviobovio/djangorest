@@ -46,14 +46,17 @@ class ClubSerializer(serializers.ModelSerializer):
 class SwimmerSerializer(serializers.ModelSerializer):
     """ Swimmer serializer """
     # IDs para escritura
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     club = serializers.PrimaryKeyRelatedField(queryset=Club.objects.all())
     # Detalles anidados para lectura
+    category_detail = CategorySerializer(source='category', read_only=True)
     club_detail = ClubSerializer(source='club', read_only=True)
 
     class Meta:
         """ Swimmer Meta class """
         model = Swimmer
-        fields = ['id', 'name', 'identification', 'sex','age','club','city','created_at','updated_at', 'club_detail']
+        fields = ['id', 'name', 'identification', 'sex','age','club','city','created_at','updated_at',
+                  'category_detail', 'club_detail']
 
         read_only_fields = ('created_at', 'updated_at')
         extra_kwargs = {

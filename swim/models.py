@@ -29,6 +29,7 @@ class Swimmer(models.Model):
     identification = models.CharField(max_length=20, default='')
     sex = models.CharField(max_length=1, choices=SEX_CHOICES, blank=False, null=False)    
     age = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=False, null=False)      
     club = models.ForeignKey(Club, on_delete=models.CASCADE, default=None)    
     city = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,11 +41,12 @@ class Swimmer(models.Model):
 
 class Date(models.Model):
     """ Date Model """
+    name = models.CharField(max_length=100, blank=False, null=False, default='')
     date = models.DateField(default=timezone.now ,blank=False, null=False)
     active = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.date} - {"Active" if self.active else "Inactive"}'
+        return f'{self.name} - {self.date} - {"Active" if self.active else "Inactive"}'
 
 class Mark(models.Model):
     """ Mark Model """
