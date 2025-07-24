@@ -55,8 +55,8 @@ class SwimmerSerializer(serializers.ModelSerializer):
     class Meta:
         """ Swimmer Meta class """
         model = Swimmer
-        fields = ['id', 'name', 'identification', 'sex','age','club','city','created_at','updated_at',
-                  'category_detail', 'club_detail']
+        fields = ['id', 'name', 'identification', 'sex','age', 'category', 'club','city',
+                  'created_at','updated_at', 'category_detail', 'club_detail']
 
         read_only_fields = ('created_at', 'updated_at')
         extra_kwargs = {
